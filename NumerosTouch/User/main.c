@@ -130,12 +130,14 @@ int isInsideCircle(int posX, int posY){
 	int distance;
 	int count = 1;
 	
-	for(int i=FIRSTX; i<=LASTX; i+=OFFSETX){
-		distance=sqrt((posX-i)*(posX-i)+(posY-FIRSTY-15)*(posY-FIRSTY-15));
-		if(distance<RADIO){
-			return count;
+	for(int j=FIRSTY; j<=LASTY; j+=OFFSETY){
+		for(int i=FIRSTX; i<=LASTX; i+=OFFSETX){
+			distance=sqrt((posX-i)*(posX-i)+(posY-j-15)*(posY-j-15));
+			if(distance<RADIO){
+				return count;
+			}
+			count++;
 		}
-		count++;
 	}
 	return -1;
 }
