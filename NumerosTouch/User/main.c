@@ -12,12 +12,13 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f4xx.h"	
-#define YOFFSET	55 //los valores de offset son para mover todo el teclado en conjunto											
-#define XOFFSET 7
-#define VALX 36
-#define VALY 52
 #define RADIO 25
-
+#define OFFSETX 77 //desplazamiento entre radios para x para los botones
+#define OFFSETY 61 //desplazamiento entre radios para y para los botones
+#define FIRSTX 43 //coordenada x para el primer circulo 
+#define FIRSTY 107 // coordenada y para el primer circulo 
+#define LASTX 197 //coordenada en x para el ultimo circulo
+#define LASTY 229 //cordenada en y para el ultimo circulo
 
 /** @addtogroup Template
   * @{
@@ -28,13 +29,10 @@ GPIO_InitTypeDef	GPIO_InitStructure;
 
 /* Private define ------------------------------------------------------------*/
 void displayConfig();
-void clearCharArray();
-void drawButtons(); 
-int isInsideCircle(int posX, int posY);
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-uint8_t cad[16];
 /* Private function prototypes -----------------------------------------------*/
+void drawCircles();
 
 
 /* Private functions ---------------------------------------------------------*/
@@ -59,7 +57,6 @@ int main(void)
 	static TP_STATE* TP_State;
 	SysTickSet();
 	displayConfig();
-	clearCharArray();
 	
 	
 	while(IOE_Config() != IOE_OK)
@@ -71,15 +68,9 @@ int main(void)
 		LCD_DisplayStringLine(LCD_LINE_8, (uint8_t*)"E INTENTE DE NUEVO");
 	}
 	LCD_SetFont(&Font16x24);
-	drawButtons();
 	
-	/*LCD_Clear(LCD_COLOR_BLACK);
-	LCD_SetTextColor(LCD_COLOR_WHITE);
 	
-	Linea = 1;
-	for (int i=0;i<16;i++){
-		printf("%c", cad[i]);
-	}*/
+	drawCircles();
 	
 
 	while(1){
@@ -90,43 +81,11 @@ int main(void)
 		LCD_SetTextColor(LCD_COLOR_WHITE);
 		printf("Y: %d  X: %d \n",TP_State->Y, TP_State->X);
 		
-		
-		//if(TP_State->TouchDetected)&&(isInsideCicle(x,y)) //retorna 1 si si o 0 sino, si igual es entero, es conveniente que me retorne un valor de acuerdo con el numero presionado? 
 		if(TP_State->TouchDetected){
 		LCD_SetFont(&Font16x24);
 		Linea = 2;
 		LCD_SetTextColor(LCD_COLOR_WHITE);
-		printf("%d\n",isInsideCircle(TP_State->X,TP_State->Y));
 			
-/*			switch(isInsideCircle(TP_State->X,TP_State->Y)){
-				case -1:
-					GPIOG->BSRRH = GPIO_Pin_13;
-					GPIOG->BSRRL = GPIO_Pin_14;
-					break;
-				case 0:
-					GPIOG->BSRRL = GPIO_Pin_13;
-					GPIOG->BSRRH = GPIO_Pin_14;
-					break;
-				case 1:
-					GPIOG->BSRRL = GPIO_Pin_13;
-					GPIOG->BSRRH = GPIO_Pin_14;
-					break;
-				case 2:
-					break;
-				case 3:
-					break;
-				case 4:
-					break;
-				case 5:
-					break;
-				case 6:
-					break;
-				case 7:
-					break;
-				case 8:
-					break;
-				case 9:
-					break;*/
 			}
 		}
 		
@@ -147,61 +106,25 @@ void displayConfig(){
 	LCD_Clear(LCD_COLOR_BLACK);
 }
 
-void clearCharArray(){
-	for (int i=0;i<15;i++){
-		cad[i]=' ';
-	}
-	cad[15]='\n';
-}
-
-void drawButtons(){
+void drawCircles(){
 	LCD_SetTextColor(LCD_COLOR_WHITE);
 	extern uint8_t Linea;
+	uint8_t counter = 1;
+	
 	Linea = 4;
-	printf("  1    2    3\n");
-	
-	LCD_DrawCircle(VALX+XOFFSET,VALY+YOFFSET,RADIO);
-	LCD_DrawCircle(VALX+77+XOFFSET,VALY+YOFFSET,RADIO);
-	LCD_DrawCircle(VALX+154+XOFFSET,VALY+YOFFSET,RADIO);
-	
-	Linea = 7;
-	printf("  4    5    6\n");
-	LCD_DrawCircle(VALX+XOFFSET,VALY+61+YOFFSET,RADIO);
-	LCD_DrawCircle(VALX+77+XOFFSET,VALY+61+YOFFSET,RADIO);
-	LCD_DrawCircle(VALX+154+XOFFSET,VALY+61+YOFFSET,RADIO);
-	
-	Linea = 9;
-	printf("  7    8    9\n");;
-	LCD_DrawCircle(VALX+XOFFSET,VALY+122+YOFFSET,RADIO);
-	LCD_DrawCircle(VALX+77+XOFFSET,VALY+122+YOFFSET,RADIO);
-	LCD_DrawCircle(VALX+154+XOFFSET,VALY+122+YOFFSET,RADIO);
-	
-	Linea = 12 ;
-	printf("       0    \n");
-	LCD_DrawCircle(113+XOFFSET,235+YOFFSET,25); //x, y, radio1,  radio2
+	for (int j=FIRSTY; j<=LASTY;j+=OFFSETY){
+		Linea=(counter==7)?9:counter+3;
+		printf("  %d    %d    %d\n",counter, counter+1, counter+2);
+		for(int i=FIRSTX; i<=LASTX; i+=OFFSETX){
+			LCD_DrawCircle(i,j,RADIO);
+		}
+		counter+=3;
+	}
 }
 
-int isInsideCircle(int posX, int posY){ // retorna valor del 0-9 si fue presionado un boton, que les corresponda, retorna -1 sino
-	int distance;
-	int count=1;
-	
-	distance = sqrt((posX-120)*(posX-120)+(posY-290)*(posY-290)); //boton digito 0
-	/*if(distance <= 25){//25 es el valor de los radios
-		return 0;
-	}*/
-	for(int j=VALY+OFFSET;j<=VALY+122+YOFFSET;j=j+61){ // y = filas diferencia en radios en y es de 61
-			for(int i=VALX+XOFFSET;i<=VALX+154+XOFFSET;i=i+77){ //x =columnas  diferencia en radios en x es de 77
-					distance = sqrt((posX-i)*(posX-i)+(posY-j)*(posY-j));
-					if(distance <= 25){//25 es el valor de los radios
-						return count;
-					}
-					else{
-						count++;
-					}
-			}
-	}
-	return -1;
-}
+
+
+
 #ifdef  USE_FULL_ASSERT
 /**
   * @brief  Reportar del nombre del archivo fuente y el número de línea
