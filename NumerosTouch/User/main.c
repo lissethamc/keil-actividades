@@ -28,11 +28,14 @@
 GPIO_InitTypeDef	GPIO_InitStructure;
 
 /* Private define ------------------------------------------------------------*/
-void displayConfig();
+
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+uint8_t cad[16];
 /* Private function prototypes -----------------------------------------------*/
 void drawCircles();
+void displayConfig();
+int isInsideCircle(int posX, int posY);
 
 
 /* Private functions ---------------------------------------------------------*/
@@ -45,14 +48,14 @@ void drawCircles();
 int main(void)
 {
  
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOG, ENABLE);
+	/*RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOG, ENABLE);
 	
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13 | GPIO_Pin_14;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_25MHz;
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-  GPIO_Init(GPIOG, &GPIO_InitStructure);
+  GPIO_Init(GPIOG, &GPIO_InitStructure);*/
 	extern uint8_t Linea;
 	static TP_STATE* TP_State;
 	SysTickSet();
@@ -68,8 +71,6 @@ int main(void)
 		LCD_DisplayStringLine(LCD_LINE_8, (uint8_t*)"E INTENTE DE NUEVO");
 	}
 	LCD_SetFont(&Font16x24);
-	
-	
 	drawCircles();
 	
 
@@ -82,14 +83,14 @@ int main(void)
 		printf("Y: %d  X: %d \n",TP_State->Y, TP_State->X);
 		
 		if(TP_State->TouchDetected){
-		LCD_SetFont(&Font16x24);
-		Linea = 2;
-		LCD_SetTextColor(LCD_COLOR_WHITE);
+			LCD_SetFont(&Font16x24);
+			Linea = 2;
+			LCD_SetTextColor(LCD_COLOR_WHITE);
 			
-			}
 		}
+	}
 		
-	}    
+}    
 
 void displayConfig(){
 	LCD_Init();
