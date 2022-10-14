@@ -120,6 +120,9 @@ void drawCircles(){
 		}
 		counter+=3;
 	}
+	Linea = 12 ;
+	printf("       0    \n");
+	LCD_DrawCircle(FIRSTX+OFFSETX,FIRSTY+OFFSETY*3,RADIO); 
 }
 
 
