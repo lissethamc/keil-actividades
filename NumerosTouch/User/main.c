@@ -18,7 +18,8 @@
 #define FIRSTX 43 //coordenada x para el primer circulo 
 #define FIRSTY 107 // coordenada y para el primer circulo 
 #define LASTX 197 //coordenada en x para el ultimo circulo
-#define LASTY 229 //cordenada en y para el ultimo circulo
+#define LASTY 249 //cordenada en y para el ultimo circulo
+#define OFFSETCHAR 16
 
 /** @addtogroup Template
   * @{
@@ -31,7 +32,10 @@ GPIO_InitTypeDef	GPIO_InitStructure;
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-uint8_t cad[16];
+uint16_t cad[16];
+int despx=0;
+int printedValue;
+int currentChar = 0;
 /* Private function prototypes -----------------------------------------------*/
 void drawCircles();
 void displayConfig();
@@ -58,6 +62,7 @@ int main(void)
   GPIO_Init(GPIOG, &GPIO_InitStructure);*/
 	extern uint8_t Linea;
 	static TP_STATE* TP_State;
+	
 	SysTickSet();
 	displayConfig();
 	
@@ -83,10 +88,19 @@ int main(void)
 		printf("Y: %d  X: %d \n",TP_State->Y, TP_State->X);
 		
 		if(TP_State->TouchDetected){
+			delay_ms(90);
+			currentChar = 0;
 			LCD_SetFont(&Font16x24);
 			Linea = 2;
 			LCD_SetTextColor(LCD_COLOR_WHITE);
-			printf("%d\n",isInsideCircle(TP_State->X,TP_State->Y));
+			
+			
+			printedValue = isInsideCircle(TP_State->X,TP_State->Y);
+			if (printedValue!=-1 || despx < 228){
+				LCD_DisplayChar(30,despx,printedValue);
+				despx+=OFFSETCHAR;
+			}
+			
 			
 		}
 	}
@@ -128,18 +142,23 @@ void drawCircles(){
 
 int isInsideCircle(int posX, int posY){
 	int distance;
-	int count = 1;
+	int count = 49;
 	
+	distance = sqrt((posX-120)*(posX-120)+(posY-310)*(posY-310)); 
+	if(distance < RADIO)//25 es el valor de los radios
+		return 48;
 	for(int j=FIRSTY; j<=LASTY; j+=OFFSETY){
 		for(int i=FIRSTX; i<=LASTX; i+=OFFSETX){
 			distance=sqrt((posX-i)*(posX-i)+(posY-j-15)*(posY-j-15));
+			
 			if(distance<RADIO){
 				return count;
 			}
-			count++;
+				count++;
 		}
 	}
 	return -1;
+	
 }
 
 
