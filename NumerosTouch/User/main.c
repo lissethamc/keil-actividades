@@ -52,14 +52,14 @@ int isInsideCircle(int posX, int posY);
 int main(void)
 {
  
-	/*RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOG, ENABLE);
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOG, ENABLE);
 	
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13 | GPIO_Pin_14;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_25MHz;
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-  GPIO_Init(GPIOG, &GPIO_InitStructure);*/
+  GPIO_Init(GPIOG, &GPIO_InitStructure);
 	extern uint8_t Linea;
 	static TP_STATE* TP_State;
 	
@@ -88,7 +88,7 @@ int main(void)
 		printf("Y: %d  X: %d \n",TP_State->Y, TP_State->X);
 		
 		if(TP_State->TouchDetected){
-			delay_ms(90);
+			delay_ms(85);
 			currentChar = 0;
 			LCD_SetFont(&Font16x24);
 			Linea = 2;
@@ -96,12 +96,16 @@ int main(void)
 			
 			
 			printedValue = isInsideCircle(TP_State->X,TP_State->Y);
-			if (printedValue!=-1 || despx < 228){
+			if (printedValue!=-1 && despx < 212){
 				LCD_DisplayChar(30,despx,printedValue);
 				despx+=OFFSETCHAR;
+				GPIOG->BSRRL = GPIO_Pin_13;
+				GPIOG->BSRRH = GPIO_Pin_14;
 			}
-			
-			
+			if(printedValue == -1){
+				GPIOG->BSRRH = GPIO_Pin_13;
+				GPIOG->BSRRL = GPIO_Pin_14;
+			}
 		}
 	}
 		

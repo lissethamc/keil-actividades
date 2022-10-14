@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\NumerosTouch.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\NumerosTouch.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Fri Oct 14 00:05:55 2022
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Fri Oct 14 00:15:00 2022
 <BR><P>
 <H3>Maximum Stack Usage =        188 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -725,6 +725,7 @@ Global Symbols
 <LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_CtrlLinesConfig
 <LI><a href="#[b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_AF_GPIOConfig
 <LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IOE_GPIO_Config
+<LI><a href="#[79]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
 <P><STRONG><a name="[a9]"></a>GPIO_PinAFConfig</STRONG> (Thumb, 70 bytes, Stack size 20 bytes, stm32f4xx_gpio.o(i.GPIO_PinAFConfig))
@@ -1197,6 +1198,7 @@ Global Symbols
 <LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_CtrlLinesConfig
 <LI><a href="#[b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_AF_GPIOConfig
 <LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IOE_GPIO_Config
+<LI><a href="#[79]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
 <P><STRONG><a name="[d6]"></a>RCC_AHB3PeriphClockCmd</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, stm32f4xx_rcc.o(i.RCC_AHB3PeriphClockCmd))
@@ -1408,7 +1410,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[79]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[79]"></a>main</STRONG> (Thumb, 270 bytes, Stack size 0 bytes, main.o(i.main))
+<P><STRONG><a name="[79]"></a>main</STRONG> (Thumb, 350 bytes, Stack size 0 bytes, main.o(i.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 188 + Unknown Stack Size
 <LI>Call Chain = main &rArr; displayConfig &rArr; LCD_Init &rArr; SDRAM_Init &rArr; SDRAM_InitSequence &rArr; delay
 </UL>
@@ -1418,6 +1420,8 @@ Global Symbols
 <LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_DisplayStringLine
 <LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_DisplayChar
 <LI><a href="#[ea]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_Clear
+<LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_AHB1PeriphClockCmd
+<LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_Init
 <LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_ms
 <LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SysTickSet
 <LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IOE_TP_GetState
