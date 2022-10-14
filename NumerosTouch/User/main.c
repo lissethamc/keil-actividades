@@ -86,6 +86,7 @@ int main(void)
 			LCD_SetFont(&Font16x24);
 			Linea = 2;
 			LCD_SetTextColor(LCD_COLOR_WHITE);
+			printf("%d\n",isInsideCircle(TP_State->X,TP_State->Y));
 			
 		}
 	}
@@ -112,7 +113,6 @@ void drawCircles(){
 	extern uint8_t Linea;
 	uint8_t counter = 1;
 	
-	Linea = 4;
 	for (int j=FIRSTY; j<=LASTY;j+=OFFSETY){
 		Linea=(counter==7)?9:counter+3;
 		printf("  %d    %d    %d\n",counter, counter+1, counter+2);
@@ -126,7 +126,19 @@ void drawCircles(){
 	LCD_DrawCircle(FIRSTX+OFFSETX,FIRSTY+OFFSETY*3,RADIO); 
 }
 
-
+int isInsideCircle(int posX, int posY){
+	int distance;
+	int count = 1;
+	
+	for(int i=FIRSTX; i<=LASTX; i+=OFFSETX){
+		distance=sqrt((posX-i)*(posX-i)+(posY-FIRSTY-15)*(posY-FIRSTY-15));
+		if(distance<RADIO){
+			return count;
+		}
+		count++;
+	}
+	return -1;
+}
 
 
 #ifdef  USE_FULL_ASSERT
